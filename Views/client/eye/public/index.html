@@ -1,0 +1,122 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <title>GazeCloudAPI | WebCam Online Eye-Tracking</title>
+
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+
+    <meta name="author" content="GazeRecorder">
+    <meta name="description" content="Accurate & Robust WebCam Online Eye-Tracking.">
+    <meta property="og:title" content="GazeCloudAPI | Cross-platform Real-Time Eye-Tracking">
+    <meta property="og:description" content="Accurate & Robust WebCam Online Eye-Tracking.">
+    <meta property="og:image" content="https://api.gazerecorder.com/gazecloudapi.png">
+    <meta property="og:url" content="https://api.gazerecorder.com">
+    <meta name="twitter:description" content="Accurate & Robust WebCam Online Eye-Tracking.">
+    <meta name="twitter:title" content="GazeCloudAPI | Cross-platform Real-Time Eye-Tracking">
+
+    <script src="./js/GazeCloudAPI.js"></script>
+    <script src="./js/heatmapLive.js"></script>
+    <!-- <script src="./js/heatmap-viewer.js"></script> -->
+    <script src="./js"></script>
+    <script type="text/javascript">
+
+        function PlotGaze(GazeData) {
+            Results.StoreData(GazeData);
+            document.getElementById("GazeData").innerHTML = "GazeX: " + GazeData.GazeX + " GazeY: " + GazeData.GazeY;
+            document.getElementById("HeadPhoseData").innerHTML = " HeadX: " + GazeData.HeadX + " HeadY: " + GazeData.HeadY + " HeadZ: " + GazeData.HeadZ;
+            document.getElementById("HeadRotData").innerHTML = " Yaw: " + GazeData.HeadYaw + " Pitch: " + GazeData.HeadPitch + " Roll: " + GazeData.HeadRoll;
+            if (true) // gaze plot
+            {
+                var x = GazeData.docX;
+                var y = GazeData.docY;
+                var gaze = document.getElementById("gaze");
+                x -= gaze.clientWidth / 2;
+                y -= gaze.clientHeight / 2;
+                gaze.style.left = x + "px";
+                gaze.style.top = y + "px";
+
+                if (GazeData.state != 0) {
+                    if (gaze.style.display == 'block')
+                        gaze.style.display = 'none';
+                }
+                else {
+                    if (gaze.style.display == 'none')
+                        gaze.style.display = 'block';
+                }
+            }
+        }
+
+        //////set callbacks/////////
+        GazeCloudAPI.OnCalibrationComplete = function () { ShowHeatMap(); console.log('gaze Calibration Complete') }
+        GazeCloudAPI.OnCamDenied = function () { console.log('camera  access denied') }
+        GazeCloudAPI.OnError = function (msg) { console.log('err: ' + msg) }
+        GazeCloudAPI.UseClickRecalibration = true;
+        GazeCloudAPI.OnResult = PlotGaze;
+
+        ShowHeatMap();
+        document.getElementById("gaze").style.display = 'none';
+
+        function start() {
+            document.getElementById("startid").style.display = 'none';
+            document.getElementById("stopid").style.display = 'block';
+            GazeCloudAPI.StartEyeTracking();
+            GazeCloudAPI.SetFps(15);
+            Results.FileName();
+        }
+
+        function stop() {
+            document.getElementById("startid").style.display = 'block';
+            document.getElementById("stopid").style.display = 'none';
+            GazeCloudAPI.StopEyeTracking();
+            Results.CreateFile();
+        }
+
+    </script>
+
+    <link rel="stylesheet" href="https://ixnegocios.com.br/public/css/style.css">
+</head>
+
+<body style="position: relative;">
+    <div style="text-align: center;display: block">
+        <h1>GazeCloud API </h1>
+        <h4>WebCam Online Eye-Tracking</h4>
+        <br>
+
+        <button id='startid' class='buttonStartEyeTrack' type="button" onclick="start() ">Start eye tracking</button>
+        <button id='stopid' style='display:none' class='buttonStartEyeTrack' type="button"
+            onclick="stop();">Stop</button>
+
+        <div class='data_realtime' style='background-color: lightblue;'>
+            <p>
+                Real-Time Data:
+                <p id="GazeData"> </p>
+                <p id="HeadPhoseData"> </p>
+                <p id="HeadRotData"> </p>
+            </p>
+        </div>
+        <div id="gaze"
+            style='position: absolute;display:none;width: 100px;height: 100px;border-radius: 50%; pointer-events: none;	z-index: 999999'>
+        </div>
+
+        <br>
+        <br>
+        <br>
+        <p>With just a few lines of code, you can install our API into your website or app to start tracking your users
+            eyes via WebCam.</p>
+        <a href='https://gazerecorder.com/gazecloudapi/'>Read More </a>
+
+        <br>
+        <br>
+        <hr>
+        <p>
+            You can also try <a href='https://app.gazerecorder.com'>GazeRecorder App</a> . HTML Session Recording on any
+            website
+        </p>
+
+    </div>
+</body>
+
+</html>

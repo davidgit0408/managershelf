@@ -1,0 +1,518 @@
+    html,
+    body {
+        width: 100%;       
+        margin: 0;
+
+/*  display: block;   No floating content on sides */
+    }
+
+/**
+* Eric Meyer's Reset CSS v2.0 (http://meyerweb.com/eric/tools/css/reset/)
+* http://cssreset.com
+*/
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+margin: 0;
+padding: 0;
+border: 0;
+font-size: 100%;
+font: inherit;
+vertical-align: baseline; }
+
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+display: block; }
+
+body {
+line-height: 1; }
+
+ol, ul {
+list-style: none; }
+
+blockquote, q {
+quotes: none; }
+
+blockquote:before, blockquote:after,
+q:before, q:after {
+content: '';
+content: none; }
+
+table {
+border-collapse: collapse;
+border-spacing: 0; }
+
+.hll {
+background-color: #ffffcc; }
+
+.c {
+color: #408080;
+font-style: italic; }
+
+/* Comment */
+.err {
+border: 1px solid #FF0000; }
+
+/* Error */
+.k {
+color: #008000;
+font-weight: bold; }
+
+/* Keyword */
+.o {
+color: #666666; }
+
+/* Operator */
+.cm {
+color: #9AA5AD;
+font-style: italic; }
+
+/* Comment.Multiline */
+.cp {
+color: #BC7A00; }
+
+/* Comment.Preproc */
+.c1 {
+color: #9AA5AD;
+font-style: italic; }
+
+/* Comment.Single */
+.cs {
+color: #408080;
+font-style: italic; }
+
+/* Comment.Special */
+.gd {
+color: #A00000; }
+
+/* Generic.Deleted */
+.ge {
+font-style: italic; }
+
+/* Generic.Emph */
+.gr {
+color: #FF0000; }
+
+/* Generic.Error */
+.gh {
+color: #000080;
+font-weight: bold; }
+
+/* Generic.Heading */
+.gi {
+color: #00A000; }
+
+/* Generic.Inserted */
+.go {
+color: #808080; }
+
+/* Generic.Output */
+.gp {
+color: #000080;
+font-weight: bold; }
+
+/* Generic.Prompt */
+.gs {
+font-weight: bold; }
+
+/* Generic.Strong */
+.gu {
+color: #800080;
+font-weight: bold; }
+
+/* Generic.Subheading */
+.gt {
+color: #0040D0; }
+
+/* Generic.Traceback */
+.kc {
+color: #008000;
+font-weight: bold; }
+
+/* Keyword.Constant */
+.kd {
+color: #229EFF;
+font-weight: bold; }
+
+/* Keyword.Declaration */
+.kn {
+color: #008000;
+font-weight: bold; }
+
+/* Keyword.Namespace */
+.kp {
+color: #008000; }
+
+/* Keyword.Pseudo */
+.kr {
+color: #008000;
+font-weight: bold; }
+
+/* Keyword.Reserved */
+.kt {
+color: #B00040; }
+
+/* Keyword.Type */
+.m {
+color: #666666; }
+
+/* Literal.Number */
+.s {
+color: #CB0C6A; }
+
+/* Literal.String */
+.na {
+color: #C38D00; }
+
+/* Name.Attribute */
+.nb {
+color: #008000; }
+
+/* Name.Builtin */
+.nc {
+color: #0000FF;
+font-weight: bold; }
+
+/* Name.Class */
+.no {
+color: #880000; }
+
+/* Name.Constant */
+.nd {
+color: #AA22FF; }
+
+/* Name.Decorator */
+.ni {
+color: #999999;
+font-weight: bold; }
+
+/* Name.Entity */
+.ne {
+color: #D2413A;
+font-weight: bold; }
+
+/* Name.Exception */
+.nf {
+color: #0000FF; }
+
+/* Name.Function */
+.nl {
+color: #A0A000; }
+
+/* Name.Label */
+.nn {
+color: #0000FF;
+font-weight: bold; }
+
+/* Name.Namespace */
+.nt {
+color: #0081E5;
+font-weight: bold; }
+
+/* Name.Tag */
+.nv {
+color: #19177C; }
+
+/* Name.Variable */
+.ow {
+color: #AA22FF;
+font-weight: bold; }
+
+/* Operator.Word */
+.w {
+color: #bbbbbb; }
+
+/* Text.Whitespace */
+.mf {
+color: #666666; }
+
+/* Literal.Number.Float */
+.mh {
+color: #666666; }
+
+/* Literal.Number.Hex */
+.mi {
+color: #666666; }
+
+/* Literal.Number.Integer */
+.mo {
+color: #666666; }
+
+/* Literal.Number.Oct */
+.sb {
+color: #BA2121; }
+
+/* Literal.String.Backtick */
+.sc {
+color: #BA2121; }
+
+/* Literal.String.Char */
+.sd {
+color: #BA2121;
+font-style: italic; }
+
+/* Literal.String.Doc */
+.s2 {
+color: #D50069; }
+
+/* Literal.String.Double */
+.se {
+color: #BB6622;
+font-weight: bold; }
+
+/* Literal.String.Escape */
+.sh {
+color: #BA2121; }
+
+/* Literal.String.Heredoc */
+.si {
+color: #BB6688;
+font-weight: bold; }
+
+/* Literal.String.Interpol */
+.sx {
+color: #008000; }
+
+/* Literal.String.Other */
+.sr {
+color: #BB6688; }
+
+/* Literal.String.Regex */
+.s1 {
+color: #BA2121; }
+
+/* Literal.String.Single */
+.ss {
+color: #19177C; }
+
+/* Literal.String.Symbol */
+.bp {
+color: #008000; }
+
+/* Name.Builtin.Pseudo */
+.vc {
+color: #19177C; }
+
+/* Name.Variable.Class */
+.vg {
+color: #19177C; }
+
+/* Name.Variable.Global */
+.vi {
+color: #19177C; }
+
+/* Name.Variable.Instance */
+.il {
+color: #666666; }
+
+/* Literal.Number.Integer.Long */
+.nx {
+color: #4C556B; }
+
+html, body {
+height: 100%;
+font-family: Roboto, "Open Sans", sans-serif;
+font-size: 16px;
+font-weight: 300;
+line-height: 1.4rem;
+background: #F3F4F5;
+color: #646C7F;
+text-rendering: optimizeLegibility; }
+@media (max-width: 600px) {
+html, body {
+  font-size: 18px; } }
+@media (max-width: 400px) {
+html, body {
+  font-size: 16px; } }
+
+h1, h2, h3, table th, table th .header {
+font-size: 1.8rem;
+color: #0087F7;
+-webkit-font-smoothing: antialiased;
+line-height: 2.2rem; }
+
+body {
+  overflow: hidden;
+}
+
+h1, h2, h3 {
+margin-top: 2.8rem;
+margin-bottom: 1.4rem; }
+
+h2 {
+font-size: 1.4rem; }
+
+h1.anchor, h2.anchor {
+margin: 0;
+padding: 0;
+height: 1px;
+overflow: hidden;
+visibility: hidden; }
+
+table th {
+font-size: 1.4rem;
+color: #646C7F; }
+
+ul, ol {
+list-style-position: inside; }
+
+a {
+color: #0087F7;
+text-decoration: none; }
+a:hover {
+border-bottom: 2px solid #0087F7; }
+
+p {
+margin: 1.4rem 0; }
+
+strong {
+font-weight: 400; }
+
+em {
+font-style: italic; }
+
+code {
+font-family: Inconsolata, monospace;
+background: rgba(0, 135, 247, 0.04);
+padding: 0.2em 0.4em; }
+
+.highlight code, td:first-child code {
+background: none;
+padding: 0; }
+
+aside {
+font-size: 0.8em;
+color: rgba(0, 0, 0, 0.4); }
+
+hr {
+border: none;
+background: none;
+position: relative;
+height: 2.8rem; }
+hr:after {
+content: "";
+position: absolute;
+top: 1.4rem;
+left: 0;
+right: 0;
+height: 1px;
+background: rgba(0, 0, 0, 0.1); }
+
+ul li {
+list-style-type: disc;
+padding-top: 0.7rem;
+padding-bottom: 0.7rem;
+border-bottom: 1px solid rgba(0, 0, 0, 0.1); }
+ul li:last-of-type {
+border: none; }
+
+.highlight {
+padding: 1.4rem;
+overflow: auto;
+background: rgba(100, 108, 128, 0.04);
+margin-top: 2.8rem;
+margin-bottom: 2.8rem; }
+
+.bitcoin {
+overflow: auto; }
+
+.buttonCal {
+  background-color: #4CAF50; /* Green */
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  display: block; 
+  margin:auto;
+  font-size: 16px;
+  border-radius: 8px;
+}
+
+.buttonCal:disabled {
+  opacity: 0.1;
+  background-color:  red;
+}
+
+.buttonRecalibrate {
+  background-color: #4CAF50; /* Green */
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  margin-left:auto;
+  margin-right:auto;
+  margin-bottom:25%;
+
+  cursor: pointer;
+  display: block; 
+  margin:auto;
+  font-size: 16px;
+  border-radius: 8px;
+
+}
+
+.buttonStartEyeTrack {
+  background-color: rgb(255, 102, 0);
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  display: block;
+  margin: auto;
+  font-size: 16px;
+  border-radius: 8px;
+}
+
+.loader {
+  border: 6px solid #fff3f3 !important;
+  border-radius: 50%!important;
+  border-top: 6px solid #3498db!important;
+  border-bottom: 6px solid #3498db!important;
+  width: 80px!important;
+  height: 80px!important;
+  -webkit-animation: spin 1s linear infinite!important; /* Safari */
+  animation: spin 1s linear infinite!important;
+  margin-bottom:40%!important;
+  display:block!important;
+  margin-left:auto!important;
+  margin-right:auto!important;
+  margin-bottom:30%!important;
+  z-index: 99000!important;	
+  opacity : .5;
+}
+
+/* Safari */
+@-webkit-keyframes spin {
+0% { -webkit-transform: rotate(0deg); }
+100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+0% { transform: rotate(0deg); }
+100% { transform: rotate(360deg); }
+}

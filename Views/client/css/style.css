@@ -1,0 +1,21 @@
+.data_realtime{
+    position: absolute;
+    width: 300px;
+    height: auto;
+    bottom: 5rem;
+    right: 0;
+  }
+  
+  #heatmapContainerWrapper{
+    z-index: 100;
+  }
+  
+  #gaze{
+    position: absolute;
+    display:none;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 999999
+  }
