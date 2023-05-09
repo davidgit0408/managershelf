@@ -43,6 +43,8 @@ class AdminController extends BaseController
         $this->permissionModel =  new \App\Models\PermissionModel();
         $this->db = \Config\Database::connect();
         $this->request = service('request');
+        $data = array();
+        $data['route'] = '';
     }
     public function index()
     {
@@ -168,6 +170,7 @@ class AdminController extends BaseController
 
         //Verificação se usuário visualizou o popup
         $data['usuario'] = $this->adminModel->get_user_by_id($id_user);
+        $data['route'] = 'dashboard';
 
         $data['view'] = $data['usuario']['view_popup'];
         $data['version'] = $this->adminModel->get_all_versions();
@@ -197,6 +200,7 @@ class AdminController extends BaseController
         $id_user = $this->session->get('id');
         $created_by = $this->session->get('created_by');
         $data['usuario'] = $this->adminModel->get_user_by_id($id_user);
+        $data['route'] = 'all_company';
 
         if ($id_user == 1) {
             $data['companies'] = $this->adminModel->get_all_available_company();
@@ -229,6 +233,7 @@ class AdminController extends BaseController
         $id_user = $this->session->get('id');
         $created_by = $this->session->get('created_by');
         $data['usuario'] = $this->adminModel->get_user_by_id($id_user);
+        $data['route'] = 'new_company';
         if ($id_user == 1) {
             $data['planograms'] = $this->adminModel->get_all_planograms();
             $data['notifications'] = $this->adminModel->get_notifications_by($id_user);
@@ -560,6 +565,7 @@ class AdminController extends BaseController
         $id_user = $this->session->get('id');
         $created_by = $this->session->get('created_by');
         $data['usuario'] = $this->adminModel->get_user_by_id($id_user);
+        $data['route'] = 'form/results';
         if ($id_user == 1) {
             $data['planograms'] = $this->adminModel->get_all_planograms();
             $data['notifications'] = $this->adminModel->get_notifications_by($id_user);
@@ -766,6 +772,7 @@ class AdminController extends BaseController
         $id_user = $this->session->get('id');
         $created_by = $this->session->get('created_by');
         $data['usuario'] = $this->adminModel->get_user_by_id($id_user);
+        $data['route'] = 'all_products';
         $data['categories'] = $this->adminModel->get_all_categories();
 
         if ($id_user == 1) {
@@ -853,6 +860,7 @@ class AdminController extends BaseController
         $id_user = $this->session->get('id');
         $created_by = $this->session->get('created_by');
         $data['usuario'] = $this->adminModel->get_user_by_id($id_user);
+        $data['route'] = 'all_products';
 
         if ($id_user == 1) {
             $data['companies'] = $this->adminModel->get_all_available_company();
@@ -903,6 +911,79 @@ class AdminController extends BaseController
         echo view("commom/template/html-footer.php");
     }
 
+    public function all_alert_products()
+    {
+
+
+        $id_user = $this->session->get('id');
+        $created_by = $this->session->get('created_by');
+        $data['usuario'] = $this->adminModel->get_user_by_id($id_user);
+        $data['route'] = 'all_planograms';
+
+        if ($id_user == 1) {
+            $data['planograms'] = $this->adminModel->get_alert_products(0);
+            $data['available_company'] = $this->adminModel->get_all_available_company();
+            $data['companies'] = $this->adminModel->get_all_company();
+            $data['notifications'] = $this->adminModel->get_notifications_by($id_user);
+        } else if ($created_by) {
+            $data['planograms'] = $this->adminModel->get_alert_products($created_by);
+            $data['available_company'] = $this->adminModel->get_available_company_by($created_by);
+            $data['companies'] = $this->adminModel->get_available_company_by($created_by);
+            $data['notifications'] = $this->adminModel->get_notifications_by($created_by);
+        } else {
+            $data['planograms'] = $this->adminModel->get_alert_products($id_user);
+            $data['available_company'] = $this->adminModel->get_available_company_by($id_user);
+            $data['companies'] = $this->adminModel->get_company_by_user($id_user);
+            $data['notifications'] = $this->adminModel->get_notifications_by($id_user);
+        }
+
+        echo view("commom/template/html-header.php");
+        echo view("admin/template/splash.php");
+        echo view("admin/template/sidebar-html.php", $data);
+        echo view("admin/template/header.php", $data);
+        echo view('admin/planogram/alert_products.php', $data);
+        echo view("admin/template/footer.php");
+        echo view("commom/template/html-footer.php");
+    }
+
+    public function alert_product_view()
+    {
+
+
+        $id_user = $this->session->get('id');
+        $created_by = $this->session->get('created_by');
+        $data['usuario'] = $this->adminModel->get_user_by_id($id_user);
+        $data['route'] = 'all_planograms';
+
+        $planogram_id = $_GET['planogram_id'];
+//        $product_id = $_GET['product_id'];
+
+        if ($id_user == 1) {
+            $data['planograms'] = $this->adminModel->get_alert_product_by_id(0, $planogram_id);
+            $data['available_company'] = $this->adminModel->get_all_available_company();
+            $data['companies'] = $this->adminModel->get_all_company();
+            $data['notifications'] = $this->adminModel->get_notifications_by($id_user);
+        } else if ($created_by) {
+            $data['planograms'] = $this->adminModel->get_alert_product_by_id(0, $planogram_id);
+            $data['available_company'] = $this->adminModel->get_available_company_by($created_by);
+            $data['companies'] = $this->adminModel->get_available_company_by($created_by);
+            $data['notifications'] = $this->adminModel->get_notifications_by($created_by);
+        } else {
+            $data['planograms'] = $this->adminModel->get_alert_product_by_id(0, $planogram_id);
+            $data['available_company'] = $this->adminModel->get_available_company_by($id_user);
+            $data['companies'] = $this->adminModel->get_company_by_user($id_user);
+            $data['notifications'] = $this->adminModel->get_notifications_by($id_user);
+        }
+
+        echo view("commom/template/html-header.php");
+        echo view("admin/template/splash.php");
+        echo view("admin/template/sidebar-html.php", $data);
+        echo view("admin/template/header.php", $data);
+        echo view('admin/planogram/alert_product_info.php', $data);
+        echo view("admin/template/footer.php");
+        echo view("commom/template/html-footer.php");
+    }
+
     public function bigdata_products()
     {
 
@@ -910,6 +991,7 @@ class AdminController extends BaseController
         $id_user = $this->session->get('id');
         $created_by = $this->session->get('created_by');
         $data['usuario'] = $this->adminModel->get_user_by_id($id_user);
+        $data['route'] = 'bigdata_products';
 
         if ($id_user == 1) {
             $data['notifications'] = $this->adminModel->get_notifications_by($id_user);
@@ -1012,6 +1094,7 @@ class AdminController extends BaseController
         $created_by = $this->session->get('created_by');
         $data['usuario'] = $this->adminModel->get_user_by_id($id_user);
         $data['categories'] = $this->adminModel->get_all_categories();
+        $data['route'] = 'new_product';
 
         //Filtrando as imagens com altura e largura iguais por usuário
         if ($id_user == 1) {
@@ -1331,6 +1414,7 @@ class AdminController extends BaseController
         $id_user = $this->session->get('id');
         $created_by = $this->session->get('created_by');
         $data['usuario'] = $this->adminModel->get_user_by_id($id_user);
+        $data['route'] = 'import_export';
 
         if ($id_user == 1) {
             $data['companies'] = $this->adminModel->get_all_available_company();
@@ -1370,6 +1454,7 @@ class AdminController extends BaseController
         $id_user = $this->session->get('id');
         $created_by = $this->session->get('created_by');
         $data['usuario'] = $this->adminModel->get_user_by_id($id_user);
+        $data['route'] = 'interviewed_import';
 
 
         if ($id_user == 1) {
@@ -1653,6 +1738,56 @@ class AdminController extends BaseController
         }
     }
 
+    public function export_csv_alert_priducts()
+    {
+        $spreadsheet = new Spreadsheet();
+        $Excel_writer = new Xlsx($spreadsheet);
+
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setCellValue('A1', 'EAN');
+        $sheet->setCellValue('B1', 'Nome');
+        $sheet->setCellValue('C1', 'alert_count');
+        $sheet->setCellValue('D1', 'total_count');
+
+        $alert_products_count = $this->adminModel->get_alert_product_by_id(0, $_GET['planogram_id']);
+        $alert_products = $this->adminModel->get_alert_product_by_id(0, $_GET['planogram_id']);
+
+        $i = 2;
+            foreach ($alert_products as $row) {
+
+                $sheet->setCellValue('A' . $i, $row['id']);
+                $sheet->setCellValue('B' . $i, $row['product_name']);
+                $sheet->setCellValue('C' . $i, $row['alert_count']);
+                $sheet->setCellValue('D' . $i, $row['qty']);
+                $i++;
+            }
+
+            $filename = 'Alert_Products.xlsx';
+
+            header('Content-Type: application/vnd.ms-excel; charset=UTF-8');
+            header('Content-Disposition: attachment;filename=' . $filename);
+            header('Cache-Control: max-age=0');
+
+            $Excel_writer->save('php://output');
+
+            $logs = array(
+                'action' => 'Exportou produtos em .XLSX',
+                'type' => 'Sucesso',
+                'id_user' => $this->session->get('id'),
+                'ip' => $this->request->getIPAddress()
+            );
+            $this->adminModel->insert_logs($logs);
+            if ($this->session->get('created_by')) $show_to = $this->session->get('created_by');
+            else $show_to = $this->session->get('id');
+
+            $notification = array(
+                'content' => $this->session->get('name') . ' exportou planilha de produtos ',
+                'id_user' => $this->session->get('id'),
+                'show_to' => $show_to
+            );
+            $this->adminModel->insert_notification($notification);
+    }
+
     public function all_planograms()
     {
 
@@ -1660,6 +1795,7 @@ class AdminController extends BaseController
         $id_user = $this->session->get('id');
         $created_by = $this->session->get('created_by');
         $data['usuario'] = $this->adminModel->get_user_by_id($id_user);
+        $data['route'] = 'all_planograms';
 
         if ($id_user == 1) {
             $data['planograms'] = $this->adminModel->get_all_planograms();
@@ -1693,6 +1829,7 @@ class AdminController extends BaseController
         $created_by = $this->session->get('created_by');
         $data['usuario'] = $this->adminModel->get_user_by_id($id_user);
         $data['release_flag'] = $release_flag;
+        $data['route'] = 'new_planogram';
 
         if ($id_user == 1) {
             $data['planograms'] = $this->adminModel->get_all_planograms();
@@ -1721,6 +1858,7 @@ class AdminController extends BaseController
         $id_user = $this->session->get('id');
         $created_by = $this->session->get('created_by');
         $data['usuario'] = $this->adminModel->get_user_by_id($id_user);
+        $data['route'] = 'all_planograms';
         $scenario = $this->adminModel->get_planogram_by_id($id_scenario);
         $data['release_flag'] = $scenario[0]['release_flag'];
         if ($id_user == 1) {
@@ -2043,6 +2181,7 @@ class AdminController extends BaseController
         $id_user = $this->session->get('id');
         $created_by = $this->session->get('created_by');
         $data['usuario'] = $this->adminModel->get_user_by_id($id_user);
+        $data['route'] = '';
         if ($id_user == 1) {
             $data['planograms'] = $this->adminModel->get_all_planograms();
             $data['notifications'] = $this->adminModel->get_notifications_by($id_user);
@@ -2212,6 +2351,7 @@ class AdminController extends BaseController
         $id_user = $this->session->get('id');
         $created_by = $this->session->get('created_by');
         $data['usuario'] = $this->adminModel->get_user_by_id($id_user);
+        $data['route'] = 'all_scenarios';
 
         if ($id_user == 1) {
             $data['planograms'] = $this->adminModel->get_all_planograms();
@@ -2315,8 +2455,8 @@ class AdminController extends BaseController
             'shelf' => $this->request->getPost('shelf'),
             'position' => $this->request->getPost('position'),
             'id_product' => $this->request->getPost('id_product'),
-            'views' => $this->request->getPost('views'),
-            'qty' => $this->request->getPost('qty'),
+            'views' => $this->request->getPost('views') != null ? $this->request->getPost('views') : 1,
+            'qty' => $this->request->getPost('qty') != null ? $this->request->getPost('qty') : 1,
             'height' => $this->request->getPost('height'),
             'width' => $this->request->getPost('width'),
         );
@@ -2403,9 +2543,9 @@ class AdminController extends BaseController
             'id_scenario' => $this->request->getPost('id_scenario'),
             'shelf' => $this->request->getPost('shelf'),
             'id_product' => $this->request->getPost('id_product'),
-            'views' => $this->request->getPost('views'),
-            'qty' => $this->request->getPost('qty'),
-            'alert_count' => $this->request->getPost('alert_count')
+            'views' => $this->request->getPost('views') != null ? $this->request->getPost('views') : 1,
+            'qty' => $this->request->getPost('qty') != null ? $this->request->getPost('qty') : 1,
+            'alert_count' => $this->request->getPost('alert_count') != null ? $this->request->getPost('alert_count') : 1
         );
         $this->adminModel->update_position($position, $id);
 
@@ -2664,6 +2804,7 @@ class AdminController extends BaseController
         $id_user = $this->session->get('id');
         $created_by = $this->session->get('created_by');
         $data['usuario'] = $this->adminModel->get_user_by_id($id_user);
+        $data['route'] = 'painel_financeiro';
 
         if ($id_user == 1) {
             $data['companies'] = $this->adminModel->get_all_available_company();
@@ -2978,6 +3119,7 @@ class AdminController extends BaseController
         $id_user = $this->session->get('id');
         $created_by = $this->session->get('created_by');
         $data['usuario'] = $this->adminModel->get_user_by_id($id_user);
+        $data['route'] = 'all_orders';
         if ($id_user == 1) {
             $data['planograms'] = $this->adminModel->get_all_planograms();
             $companies = $this->adminModel->get_all_company();
@@ -3368,6 +3510,7 @@ class AdminController extends BaseController
         $created_by = $this->session->get('created_by');
         $data['usuario'] = $this->adminModel->get_user_by_id($id_user);
         $data['products'] = $this->adminModel->get_all_products();
+        $data['route'] = 'gallery';
 
         //Filtrando as imagens por usuário
         //Apenas o id 1 (DKMA) pode ver todas as imagens
@@ -3520,6 +3663,7 @@ class AdminController extends BaseController
         $id_user = $this->session->get('id');
         $created_by = $this->session->get('created_by');
         $data['usuario'] = $this->adminModel->get_user_by_id($id_user);
+        $data['route'] = 'all_categories';
         if ($id_user == 1) {
             $data['planograms'] = $this->adminModel->get_all_planograms();
             $data['notifications'] = $this->adminModel->get_notifications_by($id_user);
@@ -3671,6 +3815,7 @@ class AdminController extends BaseController
         $id_user = $this->session->get('id');
         $created_by = $this->session->get('created_by');
         $data['usuario'] = $this->adminModel->get_user_by_id($id_user);
+        $data['route'] = 'myaccount';
         if ($id_user == 1) {
             $data['planograms'] = $this->adminModel->get_all_planograms();
             $data['notifications'] = $this->adminModel->get_notifications_by($id_user);
@@ -3805,6 +3950,7 @@ class AdminController extends BaseController
         $id_user = $this->session->get('id');
         $created_by = $this->session->get('created_by');
         $data['usuario'] = $this->adminModel->get_user_by_id($id_user);
+        $data['route'] = 'versions';
         if ($id_user == 1) {
             $data['planograms'] = $this->adminModel->get_all_planograms();
             $data['notifications'] = $this->adminModel->get_notifications_by($id_user);
@@ -3926,6 +4072,7 @@ class AdminController extends BaseController
         $id_user = $this->session->get('id');
         $created_by = $this->session->get('created_by');
         $data['usuario'] = $this->adminModel->get_user_by_id($id_user);
+        $data['route'] = 'logs';
         if ($id_user == 1) {
             $data['planograms'] = $this->adminModel->get_all_planograms();
             $data['notifications'] = $this->adminModel->get_notifications_by($id_user);
@@ -3954,6 +4101,7 @@ class AdminController extends BaseController
         $id_user = $this->session->get('id');
         $created_by = $this->session->get('created_by');
         $data['usuario'] = $this->adminModel->get_user_by_id($id_user);
+        $data['route'] = 'users';
         if ($id_user == 1) {
             $data['planograms'] = $this->adminModel->get_all_planograms();
             $data['notifications'] = $this->adminModel->get_notifications_by($id_user);

@@ -472,6 +472,97 @@ class AdminModel extends Model
         }
     }
 
+    public function get_alert_products($id)
+    {
+        $res = array();
+        if ($id == 0) {
+            $builder = $this->db->table('positions');
+            $builder->select('scenarios.*, products.name as product_name, products.id as product_id');
+            $builder->join('scenarios', 'positions.id_scenario = scenarios.id', 'left');
+            $builder->join('products', 'positions.id_product = products.id', 'left');
+            $builder->where('positions.alert_count >= positions.qty');
+            $builder->where('scenarios.release_flag = 0');
+            $query = $builder->get();
+            $temp = $query->getResultArray();
+
+            $builder = $this->db->table('positions');
+            $builder->select('scenarios.*');
+            $builder->join('scenarios', 'positions.id_scenario = scenarios.id', 'left');
+            $builder->where('positions.alert_count >= positions.qty');
+            $builder->where('scenarios.release_flag = 0');
+            $builder->groupBy('scenarios.id');
+            $query = $builder->get();
+            $scenario_ids = $query->getResultArray();
+            foreach ($scenario_ids as $key => $id) {
+                $product_ids = '';
+                $product = array();
+                foreach ($temp as $row) {
+                    if ($row['id'] == $id['id']) {
+                        $product_ids = $product_ids == '' ? $row['product_name'] : $product_ids . ',' . $row['product_name'];
+                        $product[$row['product_id']] = $row['product_name'];
+                    }
+                }
+                $scenario_ids[$key]['customization'] = $product_ids;
+                $scenario_ids[$key]['urlprintPlanogram'] = $product;
+            }
+            return $scenario_ids;
+        } else {
+            $builder = $this->db->table('positions');
+            $builder->select('scenarios.*, products.name as product_name, products.id as product_id');
+            $builder->join('scenarios', 'positions.id_scenario = scenarios.id', 'left');
+            $builder->join('products', 'positions.id_product = products.id', 'left');
+            $builder->where('id_user', $id);
+            $builder->where('positions.alert_count >= positions.qty');
+            $builder->where('scenarios.release_flag = 0');
+            $builder->groupBy('scenarios.id');
+            $query = $builder->get();
+            $temp = $query->getResultArray();
+
+            $builder = $this->db->table('positions');
+            $builder->select('scenarios.*');
+            $builder->join('scenarios', 'positions.id_scenario = scenarios.id', 'left');
+            $builder->where('positions.alert_count >= positions.qty');
+            $builder->where('id_user', $id);
+            $builder->where('scenarios.release_flag = 0');
+            $builder->groupBy('scenarios.id');
+            $query = $builder->get();
+            $scenario_ids = $query->getResultArray();
+            foreach ($scenario_ids as $key => $id) {
+                $product_ids = '';
+                $product = array();
+                foreach ($temp as $row) {
+                    if ($row['id'] == $id['id']) {
+                        $product_ids = $product_ids == '' ? $row['product_name'] : $product_ids . ',' . $row['product_name'];
+                        $product[$row['product_id']] = $row['product_name'];
+                    }
+                }
+                $scenario_ids[$key]['customization'] = $product_ids;
+                $scenario_ids[$key]['urlprintPlanogram'] = $product;
+            }
+            return $scenario_ids;
+        }
+    }
+
+    public function get_alert_product_by_id($product_id, $planogram_id)
+    {
+        $builder = $this->db->table('positions');
+        $builder->select('positions.*, products.name as product_name, scenarios.name as scenario_name, products.ean as product_ean, products.image as product_image, products.url as url');
+        $builder->join('scenarios', 'positions.id_scenario = scenarios.id', 'left');
+        $builder->join('products', 'positions.id_product = products.id', 'left');
+        $builder->where('positions.alert_count >= positions.qty');
+        $builder->where('scenarios.id', $planogram_id);
+        $builder->where('scenarios.release_flag = 0');
+        $query = $builder->get();
+        if ($query->getNumRows() > 0) {
+            $temp = $query->getResultArray();
+            return $temp;
+        } else {
+            return array();
+        }
+    }
+
+
+
     public function get_planogram_by_user($id)
     {
 

@@ -318,52 +318,53 @@ $views = 0;
 					<span class="align-middle menu">MENU</span>
 				</li>
 
-				<li class="sidebar-item mt-2">
+				<li class="sidebar-item mt-2 <?php if($route == 'dashboard') { echo 'active'; } ?>">
 					<?php if ($role == 'free') { ?><a class="sidebar-link" href="<?php echo base_url('index.php/free/dashboard') ?>"><span class="align-middle text-uppercase">Dashboard</span></a>
 					<?php } else { ?><a class="sidebar-link" href="<?php echo base_url('index.php/dashboard') ?>"><span class="align-middle text-uppercase">Dashboard</span></a><?php } ?>
 				</li>
-				<li class="sidebar-item">
+				<li class="sidebar-item <?php if($route == 'myaccount') { echo 'active'; } ?>">
 					<a class="sidebar-link" href="<?php echo base_url('index.php/myaccount') ?>"><span class="align-middle text-uppercase">Minha conta</span></a>
 				</li>
-				<li class="sidebar-item">
+				<li class="sidebar-item <?php if($route == 'painel_financeiro') { echo 'active'; } ?>">
 					<a class="sidebar-link" href="<?php echo base_url('index.php/painel_financeiro') ?>"><span class="align-middle text-uppercase">Painel Financeiro</span></a>
 				</li>
-				<li class="sidebar-item">
+				<li class="sidebar-item <?php if($route == 'dashboard') { echo 'active'; } ?>">
 					<a data-bs-target="#produtos" data-bs-toggle="collapse" class="sidebar-link collapsed">
 						<span class="align-middle text-uppercase">Produtos</span>
 					</a>
 					<ul id="produtos" class="sidebar-dropdown list-unstyled collapse " data-bs-parent="#sidebar">
-						<li class="sidebar-item"><a class="sidebar-link" href="<?php echo base_url('index.php/all_products') ?>">- Todos Produtos</a></li>
-						<li class="sidebar-item"><a class="sidebar-link" href="<?php echo base_url('index.php/new_product') ?>">- Adicionar Produto</a></li>
-						<li class="sidebar-item"><a class="sidebar-link" href="<?php echo base_url('index.php/import_export') ?>">- Importar/Exportar</a></li>
-						<li class="sidebar-item"><a class="sidebar-link" href="<?php echo base_url('index.php/bigdata_products') ?>">- Base de produtos</a></li>
+						<li class="sidebar-item <?php if($route == 'all_products') { echo 'active'; } ?>"><a class="sidebar-link" href="<?php echo base_url('index.php/all_products') ?>">- Todos Produtos</a></li>
+						<li class="sidebar-item <?php if($route == 'new_product') { echo 'active'; } ?>"><a class="sidebar-link" href="<?php echo base_url('index.php/new_product') ?>">- Adicionar Produto</a></li>
+						<li class="sidebar-item <?php if($route == 'import_export') { echo 'active'; } ?>"><a class="sidebar-link" href="<?php echo base_url('index.php/import_export') ?>">- Importar/Exportar</a></li>
+						<li class="sidebar-item <?php if($route == 'bigdata_products') { echo 'active'; } ?>"><a class="sidebar-link" href="<?php echo base_url('index.php/bigdata_products') ?>">- Base de produtos</a></li>
 					</ul>
 				</li>
-				<li class="sidebar-item">
+				<li class="sidebar-item <?php if($route == '') { echo 'active'; } ?>">
 					<a data-bs-target="#cenarios" data-bs-toggle="collapse" class="sidebar-link collapsed">
 						<span class="align-middle text-uppercase">Planogramas</span>
 					</a>
 					<ul id="cenarios" class="sidebar-dropdown list-unstyled collapse " data-bs-parent="#sidebar">
-						<li class="sidebar-item"><a class="sidebar-link" href="<?php echo base_url('index.php/all_planograms') ?>">- Ver todos</a></li>
-						<li class="sidebar-item"><a data-bs-toggle="modal" data-bs-target="#Adicionar" class="sidebar-link"">- Criar novo</a></li>
-					</ul>
+						<li class="sidebar-item <?php if($route == 'all_planograms') { echo 'active'; } ?>"><a class="sidebar-link" href="<?php echo base_url('index.php/all_planograms') ?>">- Ver todos</a></li>
+						<li class="sidebar-item <?php if($route == 'Adicionar') { echo 'active'; } ?>"><a data-bs-toggle="modal" data-bs-target="#Adicionar" class="sidebar-link"">- Criar novo</a></li>
+                        <li class="sidebar-item <?php if($route == 'all_alert_products') { echo 'active'; } ?>"><a class="sidebar-link" href="<?php echo base_url('index.php/all_alert_products') ?>">- produtos de alerta</a></li>
+                    </ul>
 				</li>
 
-				<li class="sidebar-item">
+				<li class="sidebar-item <?php if($route == '') { echo 'active'; } ?>">
 					<a data-bs-target="#estudos" data-bs-toggle="collapse" class="sidebar-link collapsed">
 						<span class="align-middle text-uppercase">Estudos</span>
 					</a>
 					<ul id="estudos" class="sidebar-dropdown list-unstyled collapse " data-bs-parent="#sidebar">
-						<li class="sidebar-item"><a class="sidebar-link" href="<?php echo base_url('index.php/all_company') ?>">- Todos Estudos</a></li>
-						<li class="sidebar-item"><a class="sidebar-link" href="<?php echo base_url('index.php/new_company') ?>">- Adicionar Estudo</a></li>
-						<li class="sidebar-item">
+						<li class="sidebar-item" <?php if($route == 'all_company') { echo 'active'; } ?>><a class="sidebar-link" href="<?php echo base_url('index.php/all_company') ?>">- Todos Estudos</a></li>
+						<li class="sidebar-item" <?php if($route == 'new_company') { echo 'active'; } ?>><a class="sidebar-link" href="<?php echo base_url('index.php/new_company') ?>">- Adicionar Estudo</a></li>
+						<li class="sidebar-item" <?php if($route == 'all_scenarios') { echo 'active'; } ?>>
 							<a class="sidebar-link" href="<?php echo base_url('index.php/all_scenarios') ?>" style="display: flex;gap: 5px;">
 								<span class="align-middle">- Cenários</span>
 								<div id="info" title="Planogramas liberados para campo." data-mdb-toggle="tooltip" data-mdb-placement="bottom"><i class="fas fa-info-circle"></i></div>
 							</a>
 						</li>
-						<li class="sidebar-item"><a class="sidebar-link" href="<?php echo base_url('index.php/form/results') ?>">- Ver Resultados</a></li>
-						<li class="sidebar-item">
+						<li class="sidebar-item" <?php if($route == 'form/results') { echo 'active'; } ?>><a class="sidebar-link" href="<?php echo base_url('index.php/form/results') ?>">- Ver Resultados</a></li>
+						<li class="sidebar-item" <?php if($route == 'all_orders') { echo 'active'; } ?>>
 							<a class="sidebar-link" href="<?php echo base_url('index.php/all_orders') ?>">
 								<span class="align-middle">- Relatórios</span>
 							</a>
@@ -371,52 +372,52 @@ $views = 0;
 					</ul>
 				</li>
 
-				<li class="sidebar-item">
+				<li class="sidebar-item <?php if($route == 'gallery') { echo 'active'; } ?>">
 					<a class="sidebar-link" href="<?php echo base_url('index.php/gallery') ?>">
 						<span class="align-middle text-uppercase">Galeria de imagens</span>
 					</a>
 				</li>
 
-				<li class="sidebar-item" style="display:none">
+				<li class="sidebar-item <?php if($route == 'all_categories') { echo 'active'; } ?>" style="display:none">
 					<a class="sidebar-link collapsed" href="<?php echo base_url('index.php/all_categories') ?>">
 						<span class="align-middle text-uppercase">Categorias</span>
 					</a>
 				</li>
 
 				<?php if (1) { ?>
-					<li class="sidebar-item">
+					<li class="sidebar-item <?php if($route == 'users') { echo 'active'; } ?>">
 						<a class="sidebar-link collapsed" href="<?php echo base_url('index.php/users') ?>">
 							<span class="align-middle text-uppercase">Usuários</span>
 						</a>
 					</li>
 				<?php } ?>
 				<?php if (in_array('IMPORTAR_ENTREVISTADOS', $permissions)) { ?>
-					<li class="sidebar-item">
+					<li class="sidebar-item <?php if($route == 'interviewed_import') { echo 'active'; } ?>">
 						<a class="sidebar-link collapsed" href="<?php echo base_url('index.php/interviewed_import') ?>">
 							<span class="align-middle text-uppercase">Importar Entrevistados</span>
 						</a>
 					</li>
 				<?php } ?>
 				<?php if (in_array('MENU_VERSOES', $permissions)) { ?>
-					<li class="sidebar-item">
+					<li class="sidebar-item <?php if($route == 'versions') { echo 'active'; } ?>">
 						<a class="sidebar-link collapsed" href="<?php echo base_url('index.php/versions') ?>">
 							<span class="align-middle text-uppercase">Versões</span>
 						</a>
 					</li>
 				<?php } ?>
 				<?php if (in_array('MENU_LOGS', $permissions)) { ?>
-					<li class="sidebar-item">
+					<li class="sidebar-item <?php if($route == 'logs') { echo 'active'; } ?>">
 						<a class="sidebar-link collapsed" href="<?php echo base_url('index.php/logs') ?>">
 							<span class="align-middle text-uppercase">Logs</span>
 						</a>
 					</li>
 				<?php } ?>
-				<li class="sidebar-item" style="background-color: #f89e24;">
+				<li class="sidebar-item <?php if($route == '') { echo 'active'; } ?>" style="background-color: #f89e24;">
 					<a class="sidebar-link collapsed" href="#!" style="color: #fff;background-color: #f89e24;">
 						<span class="align-middle text-uppercase">Treinamentos</span>
 					</a>
 				</li>
-				<li class="sidebar-item">
+				<li class="sidebar-item <?php if($route == '') { echo 'active'; } ?>">
 					<a class="sidebar-link collapsed" href="#!">
 						<span class="align-middle text-uppercase">Integração</span>
 					</a>

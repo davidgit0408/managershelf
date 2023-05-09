@@ -447,7 +447,7 @@ $session = session();
             var shelf = $('#old_product input').attr('data-shelf');
             var views = $('#edit_product input[name="views"]').val();
             var qty = $('#edit_product input[name="qty"]').val();
-            var alert_count = $('#edit_product input[name="alert_count"]').val();
+            var alert_count = $('#edit_product input[name="alert"]').val();
             var id_product = $('#edit_product select[name="id_product"]').val();
             if (views == '' || views == ' ') views = 1;
             if (views == 0) ep.position.remove_position(id, id_scenario, shelf);
@@ -462,6 +462,7 @@ $session = session();
                     shelf: shelf,
                     id_product: id_product,
                     views: views,
+                    alert_count: alert_count,
                     qty: qty
                 },
                 success: function(data) {
