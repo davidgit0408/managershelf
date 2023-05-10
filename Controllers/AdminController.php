@@ -918,7 +918,7 @@ class AdminController extends BaseController
         $id_user = $this->session->get('id');
         $created_by = $this->session->get('created_by');
         $data['usuario'] = $this->adminModel->get_user_by_id($id_user);
-        $data['route'] = 'all_planograms';
+        $data['route'] = 'all_alert_products';
 
         if ($id_user == 1) {
             $data['planograms'] = $this->adminModel->get_alert_products(0);
