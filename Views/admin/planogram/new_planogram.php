@@ -28,6 +28,10 @@ error_reporting(E_ALL & ~E_NOTICE);
                             <label class="mt-2 mb-1 form-control-label" for="location">Localização</label>
                             <input type="text" name="location" class="form-control form-control-alternative" placeholder="Defina a Localização" value="" required>
                         </div>
+                        <div class="form-group col-md-12">
+                            <label class="mt-2 mb-1 form-control-label" for="location">Planogram_type</label>
+                            <input type="text" name="planogram_type" class="form-control form-control-alternative" placeholder="Defina a Planogram type" value="" required>
+                        </div>
                         <div class="col-lg-12 text-center mt-4">
                             <button type="submit" class="btn bg-orange text-white">Cadastrar</button>
                         </div>

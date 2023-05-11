@@ -47,6 +47,7 @@ $id_user = $session->get('id');
                             <?php if ($id_user == 1) { ?><th class="d-none d-md-table-cell">Criador</th><?php } ?>
                             <th class="col">Categoria</th>
                             <th class="col">Localização</th>
+                            <th class="col">Tipo</th>
                             <th class="col">Ações</th>
                         </tr>
                     </thead>
@@ -64,6 +65,9 @@ $id_user = $session->get('id');
                                     </td>
                                     <td>
                                         <?php echo $planogram["location"]; ?>
+                                    </td>
+                                    <td>
+                                        <?php echo $planogram["planogram_type"]; ?>
                                     </td>
                                    
                                     <td>

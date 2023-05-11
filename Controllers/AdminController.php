@@ -2001,6 +2001,7 @@ class AdminController extends BaseController
             'name' => $this->request->getPost('name'),
             'category' => $this->request->getPost('category'),
             'location' => $this->request->getPost('location'),
+            'planogram_type' => $this->request->getPost('planogram_type'),
             'release_flag' => $this->request->getPost('release_flag'),
             'status' => 'Inativo',
             'id_user' => $creator
