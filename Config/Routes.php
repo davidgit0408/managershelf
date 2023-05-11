@@ -160,6 +160,8 @@ $routes->match(['get', 'post'], '/update_view_notification', 'AdminController::u
 $routes->match(['get', 'post'], '/view_notify', 'AdminController::view_notify');
 $routes->match(['get', 'post'], '/delete_notify', 'AdminController::delete_notify');
 $routes->match(['get', 'post'], '/get_company_info', 'AdminController::get_company_info');
+$routes->match(['get', 'post'], '/get_produtos', 'AdminController::get_produtos');
+$routes->match(['get', 'post'], '/check_produtos', 'AdminController::check_produtos');
 $routes->match(['get', 'post'], '/user_pass', 'AdminController::user_pass');
 $routes->match(['get', 'post'], '/add_blank_position', 'AdminController::add_blank_position');
 $routes->match(['post'], '/search_product', 'AdminController::search_product');

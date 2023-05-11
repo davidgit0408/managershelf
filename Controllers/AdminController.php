@@ -810,6 +810,55 @@ class AdminController extends BaseController
         echo view("commom/template/html-footer.php");
     }
 
+    public function get_produtos()
+    {
+        function mtimecmp($a, $b)
+        {
+            $mt_a = filemtime($a);
+            $mt_b = filemtime($b);
+
+            if ($mt_a == $mt_b)
+                return 0;
+            else if ($mt_a < $mt_b)
+                return -1;
+            else
+                return 1;
+        }
+
+        $ean_product = json_decode(json_encode($this->request->getPost('ean_product')), true);;
+
+        $data['product'] = $this->adminModel->get_product_by_ean($ean_product);
+        $data['product_images'] = "";
+        if (count($data['product']) > 0) {
+            $url = $data['product'][0]['url'];
+            if ($url != "") {
+                if (json_decode($url, true)) {
+                    $data['product_images'] = json_decode($url, true);
+                } else {
+                    $product_images = json_encode($url, true);
+                    $data['product_images'] = json_decode($product_images, true);
+                }
+            }
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }
+    }
+
+    public function check_produtos()
+    {
+
+        $ean_product = json_decode(json_encode($this->request->getPost('ean_product')), true);;
+
+        $data['product'] = $this->adminModel->get_product_by_ean($ean_product);
+        $data['product_images'] = "";
+        if (count($data['product']) > 0) {
+            echo json_encode(array('success' => 1));
+        } else {
+            echo json_encode(array('success' => 0));
+        }
+    }
+
     function get_company_info()
     {
         $id = json_decode(json_encode($this->request->getPost('id')), true);

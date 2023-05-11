@@ -133,7 +133,7 @@ $error_msg = $session->getFlashdata('error_msg');
                             <label class="mt-2 form-control-label">Largura</label>
                             <div id="info" title="As medidas de altura e largura do produto são utilizadas para gerar o share." data-mdb-toggle="tooltip" data-mdb-placement="bottom"><i class="fas fa-info-circle"></i></div>
                             <div class="input-group mt-2">
-                                <input type="number" name="width" min="1" class="form-control" placeholder="Largura do produto em centímetros">
+                                <input type="number" name="width" id="width" min="1" class="form-control" placeholder="Largura do produto em centímetros">
                                 <button class="btn bg-orange text-white" type="button" style="pointer-events: none;">cm</button>
                             </div>
                         </div>
@@ -142,7 +142,7 @@ $error_msg = $session->getFlashdata('error_msg');
                             <label class="mt-2 form-control-label">Altura</label>
                             <div id="info" title="As medidas de altura e largura do produto são utilizadas para gerar o share." data-mdb-toggle="tooltip" data-mdb-placement="bottom"><i class="fas fa-info-circle"></i></div>
                             <div class="input-group mt-2">
-                                <input type="number" name="height" min="1" class="form-control" placeholder="Altura do produto em centímetros">
+                                <input type="number" name="height" id="height" min="1" class="form-control" placeholder="Altura do produto em centímetros">
                                 <button class="btn bg-orange text-white" type="button" style="pointer-events: none;">cm</button>
                             </div>
                         </div>
@@ -178,6 +178,41 @@ $error_msg = $session->getFlashdata('error_msg');
                     </div>
                 </form>
 
+                <div class="modal fade" id="Aviso" tabindex="-1" role="dialog" aria-hidden="true" style=" padding-top: 10%; padding-bottom: 20%;" >
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Aviso</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body m-3">
+                                <div class="text-center">
+                                    <h4 id="certeza1" class="mb-4">Gostaria de obter produtos da lista de produtos?</h4>
+                                    <button id="btn-success1" class="product_ean" onclick="get_produtos()" data-bs-dismiss="modal" data-id="" style="
+                                        background-color: rgb(0, 204, 153);
+                                        border-color: rgb(0, 204, 153);
+                                        display: inline-block;
+                                        font-weight: 400;
+                                        line-height: 1.5;
+                                        color: #3e4676;
+                                        text-align: center;
+                                        vertical-align: middle;
+                                        cursor: pointer;
+                                        -webkit-user-select: none;
+                                        -moz-user-select: none;
+                                        user-select: none;
+                                        padding: 0.25rem 0.7rem;
+                                        font-size: .9375rem;
+                                        border-radius: 0.2rem;
+                                        transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;">
+                                        SIM
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button data-bs-toggle="modal" data-bs-target="#Aviso" id="open_modal" style="display: none"></button>
                 <div class="modal fade" id="sizedModalLg" tabindex="-1" role="dialog" aria-hidden="true">
                     <div class="modal-dialog modal-lg" role="document">
                         <div class="modal-content">
@@ -513,6 +548,50 @@ $error_msg = $session->getFlashdata('error_msg');
         idValue = document.querySelector("input[name=id]").value;
         formData.append("id", idValue);
     });
+
+    $("input[name=ean]").change( function() {
+        let ean = $("input[name=ean]").val();
+        // $("input[name=ean]").val('');
+        if (ean != null) {
+            $.ajax({
+                url: "<?php echo base_url('index.php/check_produtos'); ?>",
+                method: "POST",
+                data: {ean_product: ean},
+                success: function (data) {
+                    if (JSON.parse(data).success == 1) {
+                        $('.product_ean').attr('data-id', ean);
+                        $("#open_modal").click();
+                    }
+                }
+            })
+        }
+    });
+
+    function get_produtos() {
+        let ean = $('.product_ean').attr('data-id');
+        $.ajax({
+            url: "<?php echo base_url('index.php/get_produtos'); ?>",
+            method: "POST",
+            data: {ean_product: ean},
+            success: function (data) {
+                console.log(JSON.parse(data))
+                let dataArray = JSON.parse(data);
+                console.log(dataArray);
+                $('#name').val(dataArray['product'][0]['name']);
+                $('#price').val(dataArray['product'][0]['price']);
+                $('#brand').val(dataArray['product'][0]['hoje']);
+                $('#producer').val(dataArray['product'][0]['producer']);
+                $('#category').val(dataArray['product'][0]['category']);
+                $('#grammage').val(dataArray['product'][0]['grammage']);
+                $('#feature').val(dataArray['product'][0]['feature']);
+                $('#ean').val(dataArray['product'][0]['ean']);
+                $('#width').val(dataArray['product'][0]['width']);
+                $('#height').val(dataArray['product'][0]['height']);
+                $('.imgProd').attr('src', dataArray['product_images']);
+                $('.img360').attr('src', dataArray['product'][0]['url']);
+            }
+        })
+    }
 
     myDropzone.on("error", function(file, response) {
         console.log(response);
