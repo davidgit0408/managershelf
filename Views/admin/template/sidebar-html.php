@@ -335,9 +335,11 @@ $views = 0;
 					<ul id="produtos" class="sidebar-dropdown list-unstyled collapse " data-bs-parent="#sidebar">
 						<li class="sidebar-item <?php if($route == 'all_products') { echo 'active'; } ?>"><a class="sidebar-link" href="<?php echo base_url('index.php/all_products') ?>">- Todos Produtos</a></li>
 						<li class="sidebar-item <?php if($route == 'new_product') { echo 'active'; } ?>"><a class="sidebar-link" href="<?php echo base_url('index.php/new_product') ?>">- Adicionar Produto</a></li>
-						<li class="sidebar-item <?php if($route == 'import_export') { echo 'active'; } ?>"><a class="sidebar-link" href="<?php echo base_url('index.php/import_export') ?>">- Importar/Exportar</a></li>
+						<li class="sidebar-item <?php if($route == 'import_export') { echo 'active'; } ?>"><a class="sidebar-link" href="<?php echo base_url('index.php/import_export') ?>">- Importar/Exportar Produto</a></li>
 						<li class="sidebar-item <?php if($route == 'bigdata_products') { echo 'active'; } ?>"><a class="sidebar-link" href="<?php echo base_url('index.php/bigdata_products') ?>">- Base de produtos</a></li>
-					</ul>
+                        <li class="sidebar-item <?php if($route == 'new_bigdata') { echo 'active'; } ?>"><a class="sidebar-link" href="<?php echo base_url('index.php/new_bigdata') ?>">- Adicionar Base Produto</a></li>
+                        <li class="sidebar-item <?php if($route == 'import_export_base') { echo 'active'; } ?>"><a class="sidebar-link" href="<?php echo base_url('index.php/import_export_base') ?>">- Importar/Exportar Base Produto</a></li>
+                    </ul>
 				</li>
 				<li class="sidebar-item">
 					<a data-bs-target="#cenarios" data-bs-toggle="collapse" class="sidebar-link collapsed">
@@ -349,6 +351,10 @@ $views = 0;
                         <li class="sidebar-item <?php if($route == 'all_alert_products') { echo 'active'; } ?>"><a class="sidebar-link" href="<?php echo base_url('index.php/all_alert_products') ?>">- produtos de alerta</a></li>
                     </ul>
 				</li>
+
+                <li class="sidebar-item <?php if($route == 'setores') { echo 'active'; } ?>">
+                    <a class="sidebar-link" href="<?php echo base_url('index.php/setores') ?>"><span class="align-middle text-uppercase">Setores</span></a>
+                </li>
 
 				<li class="sidebar-item">
 					<a data-bs-target="#estudos" data-bs-toggle="collapse" class="sidebar-link collapsed">

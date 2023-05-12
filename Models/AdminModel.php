@@ -238,6 +238,13 @@ class AdminModel extends Model
         $builder->insert();
     }
 
+    public function insert_base_product($data)
+    {
+        $builder = $this->db->table('bigdata_products');
+        $builder->set($data);
+        $builder->insert();
+    }
+
     public function insert_interviewed_data($data)
     {
         $builder = $this->db->table('interviewed_data');
@@ -284,6 +291,16 @@ class AdminModel extends Model
     public function get_all_products()
     {
         $query = $this->db->table('products')->get();
+        if ($query->getNumRows() > 0) {
+            return $query->getResultArray();
+        } else {
+            return array();
+        }
+    }
+
+    public function get_all_base_products()
+    {
+        $query = $this->db->table('bigdata_products')->get();
         if ($query->getNumRows() > 0) {
             return $query->getResultArray();
         } else {
@@ -379,6 +396,16 @@ class AdminModel extends Model
     public function get_product_by_ean($ean)
     {
         $query = $this->db->table('products')->orderBy('id', 'ASC')->where('ean', $ean)->get();
+        if ($query->getNumRows() > 0) {
+            return $query->getResultArray();
+        } else {
+            return array();
+        }
+    }
+
+    public function get_base_product_by_ean($ean)
+    {
+        $query = $this->db->table('bigdata_products')->orderBy('id', 'ASC')->where('ean', $ean)->get();
         if ($query->getNumRows() > 0) {
             return $query->getResultArray();
         } else {
@@ -552,6 +579,24 @@ class AdminModel extends Model
         $builder->where('positions.alert_count >= positions.qty');
         $builder->where('scenarios.id', $planogram_id);
         $builder->where('scenarios.release_flag = 0');
+        $query = $builder->get();
+        if ($query->getNumRows() > 0) {
+            $temp = $query->getResultArray();
+            return $temp;
+        } else {
+            return array();
+        }
+    }
+
+    public function get_alert_scenario()
+    {
+        $builder = $this->db->table('positions');
+        $builder->select('positions.*, products.name as product_name, scenarios.name as scenario_name, products.ean as product_ean, products.image as product_image, products.url as url');
+        $builder->join('scenarios', 'positions.id_scenario = scenarios.id', 'left');
+        $builder->join('products', 'positions.id_product = products.id', 'left');
+        $builder->where('positions.alert_count >= positions.qty');
+        $builder->where('scenarios.release_flag = 0');
+        $builder->groupBy('scenarios.id');
         $query = $builder->get();
         if ($query->getNumRows() > 0) {
             $temp = $query->getResultArray();
@@ -819,8 +864,9 @@ class AdminModel extends Model
     {
 
         $builder = $this->db->table('positions');
-        $builder->select('positions.*, products.name as product_name, products.price as product_price, products.ean as product_ean, products.image as product_image, products.url as url, positions.width as position_width, positions.height as position_height, products.width as product_width, products.height as product_height');
+        $builder->select('positions.*, products.name as product_name, scenarios.created_at, scenarios.name as scenario_name, products.price as product_price, products.ean as product_ean, products.image as product_image, products.url as url, positions.width as position_width, positions.height as position_height, products.width as product_width, products.height as product_height');
         $builder->join('products', 'positions.id_product = products.id', 'left');
+        $builder->join('scenarios', 'positions.id_scenario = scenarios.id', 'left');
         $builder->where('id_scenario', $id);
         $builder->orderBy('column', 'ASC')->orderBy('shelf', 'ASC')->orderBy('position', 'ASC');
         $query = $builder->get();

@@ -18,7 +18,7 @@ $id_user = $session->get('id');
                 </div>
                 <div class="col-12 col-md-4 col-sm-4 col-lg-4 col-xl-4 col-xl-4 text-right p-0 mt-3">
                     <!--                    <a href="new_planogram" class="btn bg-orange text-white float-end" style="white-space:nowrap;">Adicionar planograma</a>-->
-                    <a href="<?= base_url('index.php/export_csv_alert_priducts?planogram_id=' . $_GET['planogram_id']); ?>" class="col-5 btn btn-github text-white float-end m-1" >Exportar</a>
+                    <a href="<?= base_url('index.php/export_csv_alert_products?planogram_id=' . $_GET['planogram_id']); ?>" class="col-5 btn btn-github text-white float-end m-1" >Exportar</a>
                 </div>
             </div>
             <div class="modal fade" id="Adicionar" tabindex="-1" role="dialog" aria-hidden="true" style=" padding-top: 10%; padding-bottom: 20%;" >

@@ -102,6 +102,9 @@ $max_pages = ceil($total / $total_reg);
                 <div class="col-12 col-md-8 col-sm-8 col-lg-8 col-xl-8 col-xl-8">
                     <h3 class="mb-0">Base Produtos</h3>
                 </div>
+                <div class="col-12 col-md-4 col-sm-4 col-lg-4 col-xl-4 col-xl-4 text-right p-0 mt-1">
+                    <a href="new_bigdata" style="width: 200px;" class="col-5 btn bg-orange text-white float-end m-1" >Adicionar Base Produto</a>
+                </div>
             </div>
             <div class="form-group mb-3">
                 <div class="d-flex col-12 col-md-4 col-sm-4 col-lg-4 col-xl-4">

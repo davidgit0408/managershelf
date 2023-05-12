@@ -845,12 +845,61 @@ class AdminController extends BaseController
         }
     }
 
+    public function get_base_produtos()
+    {
+        function mtimecmp($a, $b)
+        {
+            $mt_a = filemtime($a);
+            $mt_b = filemtime($b);
+
+            if ($mt_a == $mt_b)
+                return 0;
+            else if ($mt_a < $mt_b)
+                return -1;
+            else
+                return 1;
+        }
+
+        $ean_product = json_decode(json_encode($this->request->getPost('ean_product')), true);;
+
+        $data['product'] = $this->adminModel->get_base_product_by_ean($ean_product);
+        $data['product_images'] = "";
+        if (count($data['product']) > 0) {
+            $url = $data['product'][0]['url'];
+            if ($url != "") {
+                if (json_decode($url, true)) {
+                    $data['product_images'] = json_decode($url, true);
+                } else {
+                    $product_images = json_encode($url, true);
+                    $data['product_images'] = json_decode($product_images, true);
+                }
+            }
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }
+    }
+
     public function check_produtos()
     {
 
         $ean_product = json_decode(json_encode($this->request->getPost('ean_product')), true);;
 
         $data['product'] = $this->adminModel->get_product_by_ean($ean_product);
+        $data['product_images'] = "";
+        if (count($data['product']) > 0) {
+            echo json_encode(array('success' => 1));
+        } else {
+            echo json_encode(array('success' => 0));
+        }
+    }
+
+    public function check_base_produtos()
+    {
+
+        $ean_product = json_decode(json_encode($this->request->getPost('ean_product')), true);;
+
+        $data['product'] = $this->adminModel->get_base_product_by_ean($ean_product);
         $data['product_images'] = "";
         if (count($data['product']) > 0) {
             echo json_encode(array('success' => 1));
@@ -1124,6 +1173,51 @@ class AdminController extends BaseController
         }
     }
 
+    public function new_bigdata()
+    {
+        function mtimecmp($a, $b)
+        {
+            $mt_a = filemtime($a);
+            $mt_b = filemtime($b);
+
+            if ($mt_a == $mt_b)
+                return 0;
+            else if ($mt_a < $mt_b)
+                return -1;
+            else
+                return 1;
+        }
+
+        $id_user = $this->session->get('id');
+        $created_by = $this->session->get('created_by');
+        $data['usuario'] = $this->adminModel->get_user_by_id($id_user);
+        $data['categories'] = $this->adminModel->get_all_categories();
+        $data['route'] = 'new_bigdata';
+
+        //Filtrando as imagens com altura e largura iguais por usuário
+        if ($id_user == 1) {
+            $data['imagens'] = $this->adminModel->get_all_files();
+            $data['planograms'] = $this->adminModel->get_all_planograms();
+            $data['notifications'] = $this->adminModel->get_notifications_by($id_user);
+        } else if ($created_by) {
+            $data['imagens'] = $this->adminModel->get_files_by($created_by);
+            $data['planograms'] = $this->adminModel->get_planogram_by_user($created_by);
+            $data['notifications'] = $this->adminModel->get_notifications_by($created_by);
+        } else {
+            $data['imagens'] = $this->adminModel->get_files_by($id_user);
+            $data['planograms'] = $this->adminModel->get_planogram_by_user($id_user);
+            $data['notifications'] = $this->adminModel->get_notifications_by($id_user);
+        }
+
+        echo view("commom/template/html-header.php");
+        echo view("admin/template/splash.php");
+        echo view("admin/template/sidebar-html.php", $data);
+        echo view("admin/template/header.php", $data);
+        echo view('admin/product/new_bigdata.php', $data);
+        echo view("admin/template/footer.php");
+        echo view("commom/template/html-footer.php");
+    }
+
     public function new_product()
     {
         function mtimecmp($a, $b)
@@ -1235,6 +1329,75 @@ class AdminController extends BaseController
                 $this->adminModel->insert_logs($logs);
                 $this->session->getFlashdata('error_msg', 'O EAN informado já está cadastrado. Por favor informe um EAN válido. ');
                 return redirect()->to('/new_product');
+            }
+        }
+    }
+
+    public function add_bigdata()
+    {
+        $ean = $this->request->getPost('ean');
+        if ($ean == '' || $ean == ' ') {
+            $this->session->setFlashdata('error_msg', 'Por favor, preencha o campo "Ean do Produto" com o EAN correspondente a este produto.');
+            return redirect()->to('/new_bigdata');
+        } else {
+            $check = $this->adminModel->check('bigdata_products', 'ean', $this->request->getPost('ean'));
+            if (!$check) {
+                $image_gon = $this->request->getPost('images_url2');
+                $image_url = $this->request->getPost('images_url');
+
+                if ($this->isJson($image_gon))
+                    $image_gon = json_decode($image_gon);
+
+                if ($this->isJson($image_url))
+                    $image_url = json_decode($image_url);
+
+                $product = array(
+                    'id' => $this->request->getPost('id'),
+                    'name' => $this->request->getPost('name'),
+                    'url' => $image_url,
+                    'image' => $image_gon,
+                    'price' => $this->request->getPost('price'),
+                    'brand' => $this->request->getPost('brand'),
+                    'producer' => $this->request->getPost('producer'),
+                    'category' => $this->request->getPost('category'),
+                    'grammage' => $this->request->getPost('grammage'),
+                    'feature' => $this->request->getPost('feature'),
+                    'ean' => $this->request->getPost('ean'),
+                    'width' => $this->request->getPost('width'),
+                    'height' => $this->request->getPost('height')
+                );
+                $this->adminModel->insert_base_product($product);
+
+                $logs = array(
+                    'action' => 'Adicionou um base produto.',
+                    'type' => 'Sucesso',
+                    'id_user' => $this->session->get('id'),
+                    'ip' => $this->request->getIPAddress()
+                );
+                $this->adminModel->insert_logs($logs);
+
+                if ($this->session->get('created_by')) $show_to = $this->session->get('created_by');
+                else $show_to = $this->session->get('id');
+                $notification = array(
+                    'content' => $this->session->get('name') . ' adicionou o produto ' . $this->request->getPost('name'),
+                    'id_user' => $this->session->get('id'),
+                    'show_to' => $show_to
+                );
+                $this->adminModel->insert_notification($notification);
+
+                $this->session->getFlashdata('success_msg', 'Produto inserido com sucesso!');
+                return redirect()->to('/bigdata_products');
+            } else {
+                $logs = array(
+                    'action' => 'Tentou cadastrar produto com EAN já existente.',
+                    'message' => 'O EAN informado já está cadastrado. Por favor informe um EAN válido.',
+                    'type' => 'Erro',
+                    'id_user' => $this->session->get('id'),
+                    'ip' => $this->request->getIPAddress()
+                );
+                $this->adminModel->insert_logs($logs);
+                $this->session->getFlashdata('error_msg', 'O EAN informado já está cadastrado. Por favor informe um EAN válido. ');
+                return redirect()->to('/bigdata_products');
             }
         }
     }
@@ -1498,6 +1661,46 @@ class AdminController extends BaseController
         echo view("commom/template/html-footer.php");
     }
 
+    public function import_export_base()
+    {
+        $id_user = $this->session->get('id');
+        $created_by = $this->session->get('created_by');
+        $data['usuario'] = $this->adminModel->get_user_by_id($id_user);
+        $data['route'] = 'import_export_base';
+
+        if ($id_user == 1) {
+            $data['companies'] = $this->adminModel->get_all_available_company();
+            $data['planograms'] = $this->adminModel->get_all_planograms();
+            $data['notifications'] = $this->adminModel->get_notifications_by($id_user);
+        } else if ($created_by) {
+            $data['companies'] = $this->adminModel->get_available_company_by($created_by);
+            $data['planograms'] = $this->adminModel->get_planogram_by_user($created_by);
+            $data['notifications'] = $this->adminModel->get_notifications_by($created_by);
+        } else {
+            $data['companies'] = $this->adminModel->get_available_company_by($id_user);
+            $data['planograms'] = $this->adminModel->get_planogram_by_user($id_user);
+            $data['notifications'] = $this->adminModel->get_notifications_by($id_user);
+        }
+
+        $data['categories'] = array();
+        $data['brands'] = array();
+        $data['producers'] = array();
+        $data['all_categories'] = $this->adminModel->get_all_categories();
+        $products = $this->adminModel->get_all_base_products();
+        if ($products) foreach ($products as $product) {
+            array_push($data['categories'], $product['category']);
+            array_push($data['brands'], $product['brand']);
+            array_push($data['producers'], $product['producer']);
+        }
+        echo view("commom/template/html-header.php");
+        echo view("admin/template/splash.php");
+        echo view("admin/template/sidebar-html.php", $data);
+        echo view("admin/template/header.php", $data);
+        echo view('admin/product/import_export_base.php', $data);
+        echo view("admin/template/footer.php");
+        echo view("commom/template/html-footer.php");
+    }
+
     public function interviewed_import()
     {
         $id_user = $this->session->get('id');
@@ -1703,6 +1906,105 @@ class AdminController extends BaseController
         return redirect()->to('/import_export');
     }
 
+    public function import_csv_base()
+    {
+        $ean_repetido = 0;
+        if (isset($_FILES['file'])) {
+            $errors = array();
+            $allowed_ext = array('csv');
+
+            $file_name = $_FILES['file']['name'];
+            // $file_ext = strtolower(end(explode('.', $file_name)));
+            $file_size = $_FILES['file']['size'];
+            $file_tmp = $_FILES['file']['tmp_name'];
+
+            $row = 0;
+            if (($handle = fopen($file_tmp, "r")) !== FALSE) {
+                while (($data = fgetcsv($handle, 10000, ";")) !== FALSE) {
+                    $row++;
+                    if (count($data) != 8) {
+                        $this->session->getFlashdata('error_msg_imp', 'Utilize o modelo padrão para envio de dados.');
+                        return redirect()->to('/import_export_base');
+                    }
+                    if ($row == 1) continue;
+
+                    $data = array_pad($data, 8, '');
+
+                    $ean = $data[0];
+                    $nome = $data[1];
+                    $preco = $data[2];
+                    $marca = $data[3];
+                    $fabricante = $data[4];
+                    $gramatura = $data[5];
+                    $caracteristica = $data[6];
+                    $categoria = $data[7];
+
+                    $check = $this->adminModel->check('products', 'ean', $ean);
+                    if (!$check) {
+                        //consulta se existe a categoria para pegar o id
+                        $get_category = $this->adminModel->get_category_by_name($categoria);
+                        if ($get_category) {
+                            $category = $get_category[0]['id'];
+                        } else {
+                            //se ainda não existir a categoria cria
+                            $category_name = array('name' => $categoria);
+                            $this->adminModel->insert_category($category_name);
+                            $get_category = $this->adminModel->get_category_by_name($categoria);
+                            $category = $get_category[0]['id'];
+                        }
+
+                        $product = array(
+                            'ean' => $ean,
+                            'name' => $nome,
+                            'price' => $preco,
+                            'brand' => $marca,
+                            'producer' => $fabricante,
+                            'grammage' => $gramatura,
+                            'feature' => $caracteristica,
+                            'category' => $category,
+                            'id_user' => $this->session->get('id')
+                        );
+                        $this->adminModel->insert_base_product($product);
+                        $logs = array(
+                            'action' => 'Importou produtos em csv.',
+                            'type' => 'Sucesso',
+                            'id_user' => $this->session->get('id'),
+                            'ip' => $this->request->getIPAddress()
+                        );
+                        $this->adminModel->insert_logs($logs);
+                        if ($this->session->get('created_by')) $show_to = $this->session->get('created_by');
+                        else $show_to = $this->session->get('id');
+
+                        $notification = array(
+                            'content' => $this->session->get('name') . ' importou produtos por CSV.',
+                            'id_user' => $this->session->get('id'),
+                            'show_to' => $show_to
+                        );
+                        $this->adminModel->insert_notification($notification);
+                    } else {
+                        $ean_repetido++;
+                    }
+                }
+                fclose($handle);
+            }
+        }
+        if ($product) {
+            $this->session->getFlashdata('success_msg_imp', 'Produtos inseridos com sucesso. Na sua base existia um total de ' . $ean_repetido . ' ean(s) que já estavam cadastrados em nosso banco de dados e/ou repetidos.');
+        } else {
+            $this->session->getFlashdata('error_msg_imp', 'Todos os eans inseridos já existem em nosso banco de dados. Nenhum produto cadastrado.');
+            $logs = array(
+                'action' => 'Inseriu eans repetidos na importação.',
+                'type' => 'Erro',
+                'message' => 'Todos os eans inseridos já existem em nosso banco de dados. Nenhum produto cadastrado.',
+                'id_user' => $this->session->get('id'),
+                'ip' => $this->request->getIPAddress()
+            );
+            $this->adminModel->insert_logs($logs);
+        }
+
+        return redirect()->to('/import_export_base');
+    }
+
     public function export_csv()
     {
         $spreadsheet = new Spreadsheet();
@@ -1787,7 +2089,91 @@ class AdminController extends BaseController
         }
     }
 
-    public function export_csv_alert_priducts()
+    public function export_csv_base()
+    {
+        $spreadsheet = new Spreadsheet();
+        $Excel_writer = new Xlsx($spreadsheet);
+
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setCellValue('A1', 'EAN');
+        $sheet->setCellValue('B1', 'Nome');
+        $sheet->setCellValue('C1', 'Preço');
+        $sheet->setCellValue('D1', 'Marca');
+        $sheet->setCellValue('E1', 'Fabricante');
+        $sheet->setCellValue('F1', 'Gramatura');
+        $sheet->setCellValue('G1', 'Característica');
+        $sheet->setCellValue('H1', 'Categoria');
+
+        $this->db = \Config\Database::connect();
+        $query = $this->request->getPost();
+        $builder = $this->db->table('bigdata_products');
+        if ($query['category'] != 'all') $builder->where('category', $query['category']);
+        if ($query['brand'] != 'all') $builder->where('brand', $query['brand']);
+        if ($query['producer'] != 'all') $builder->where('producer', $query['producer']);
+        $query = $builder->get();
+
+        if ($query) {
+            $i = 2;
+            foreach ($query->getResult('array') as $row) {
+                $categoria = '';
+                $categories = $this->adminModel->get_category_by_id($row['category']);
+                foreach ($categories as $category) {
+                    if (empty($category)) {
+                        $categoria = 'Dados Inexistentes';
+                    } else {
+                        $categoria = $category['name'];
+                    }
+                }
+                $sheet->setCellValue('A' . $i, $row['ean']);
+                $sheet->setCellValue('B' . $i, $row['name']);
+                $sheet->setCellValue('C' . $i, $row['price']);
+                $sheet->setCellValue('D' . $i, $row['brand']);
+                $sheet->setCellValue('E' . $i, $row['producer']);
+                $sheet->setCellValue('G' . $i, $row['feature']);
+                $sheet->setCellValue('F' . $i, $row['grammage']);
+                $sheet->setCellValue('H' . $i, $categoria);
+                $i++;
+            }
+
+            $filename = 'Produtos.xlsx';
+
+            header('Content-Type: application/vnd.ms-excel; charset=UTF-8');
+            header('Content-Disposition: attachment;filename=' . $filename);
+            header('Cache-Control: max-age=0');
+
+            $Excel_writer->save('php://output');
+
+            $logs = array(
+                'action' => 'Exportou produtos em .XLSX',
+                'type' => 'Sucesso',
+                'id_user' => $this->session->get('id'),
+                'ip' => $this->request->getIPAddress()
+            );
+            $this->adminModel->insert_logs($logs);
+            if ($this->session->get('created_by')) $show_to = $this->session->get('created_by');
+            else $show_to = $this->session->get('id');
+
+            $notification = array(
+                'content' => $this->session->get('name') . ' exportou planilha de produtos ',
+                'id_user' => $this->session->get('id'),
+                'show_to' => $show_to
+            );
+            $this->adminModel->insert_notification($notification);
+        } else {
+            $logs = array(
+                'action' => 'Erro na exportação.',
+                'type' => 'Erro',
+                'message' => 'Nenhum produto encontrado',
+                'id_user' => $this->session->get('id'),
+                'ip' => $this->request->getIPAddress()
+            );
+            $this->adminModel->insert_logs($logs);
+            $this->session->getFlashdata('error_msg', 'Nenhum produto encontrado.');
+            return redirect()->to('/import_export');
+        }
+    }
+
+    public function export_csv_alert_products()
     {
         $spreadsheet = new Spreadsheet();
         $Excel_writer = new Xlsx($spreadsheet);
@@ -1837,6 +2223,55 @@ class AdminController extends BaseController
             $this->adminModel->insert_notification($notification);
     }
 
+    public function export_csv_setores()
+    {
+        $spreadsheet = new Spreadsheet();
+        $Excel_writer = new Xlsx($spreadsheet);
+
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setCellValue('A1', 'ID');
+        $sheet->setCellValue('B1', 'Nome');
+        $sheet->setCellValue('C1', 'Categoria');
+        $sheet->setCellValue('D1', 'Localização');
+
+        $alert_products = $this->adminModel->get_alert_scenario();
+
+        $i = 2;
+        foreach ($alert_products as $row) {
+
+            $sheet->setCellValue('A' . $i, $row['id']);
+            $sheet->setCellValue('B' . $i, $row['name']);
+            $sheet->setCellValue('C' . $i, $row['category']);
+            $sheet->setCellValue('D' . $i, $row['location']);
+            $i++;
+        }
+
+        $filename = 'Alert_Products.xlsx';
+
+        header('Content-Type: application/vnd.ms-excel; charset=UTF-8');
+        header('Content-Disposition: attachment;filename=' . $filename);
+        header('Cache-Control: max-age=0');
+
+        $Excel_writer->save('php://output');
+
+        $logs = array(
+            'action' => 'Exportou produtos em .XLSX',
+            'type' => 'Sucesso',
+            'id_user' => $this->session->get('id'),
+            'ip' => $this->request->getIPAddress()
+        );
+        $this->adminModel->insert_logs($logs);
+        if ($this->session->get('created_by')) $show_to = $this->session->get('created_by');
+        else $show_to = $this->session->get('id');
+
+        $notification = array(
+            'content' => $this->session->get('name') . ' exportou planilha de produtos ',
+            'id_user' => $this->session->get('id'),
+            'show_to' => $show_to
+        );
+        $this->adminModel->insert_notification($notification);
+    }
+
     public function all_planograms()
     {
 
@@ -1868,6 +2303,42 @@ class AdminController extends BaseController
         echo view("admin/template/sidebar-html.php", $data);
         echo view("admin/template/header.php", $data);
         echo view('admin/planogram/all.php', $data);
+        echo view("admin/template/footer.php");
+        echo view("commom/template/html-footer.php");
+    }
+
+    public function setores()
+    {
+
+
+        $id_user = $this->session->get('id');
+        $created_by = $this->session->get('created_by');
+        $data['usuario'] = $this->adminModel->get_user_by_id($id_user);
+        $data['route'] = 'setores';
+
+        if ($id_user == 1) {
+            $data['planograms'] = $this->adminModel->get_alert_products(0);
+            $data['available_company'] = $this->adminModel->get_all_available_company();
+            $data['companies'] = $this->adminModel->get_all_company();
+            $data['notifications'] = $this->adminModel->get_notifications_by($id_user);
+        } else if ($created_by) {
+            $data['planograms'] = $this->adminModel->get_alert_products($created_by);
+            $data['available_company'] = $this->adminModel->get_available_company_by($created_by);
+            $data['companies'] = $this->adminModel->get_available_company_by($created_by);
+            $data['notifications'] = $this->adminModel->get_notifications_by($created_by);
+        } else {
+            $data['planograms'] = $this->adminModel->get_alert_products($id_user);
+            $data['available_company'] = $this->adminModel->get_available_company_by($id_user);
+            $data['companies'] = $this->adminModel->get_company_by_user($id_user);
+            $data['notifications'] = $this->adminModel->get_notifications_by($id_user);
+        }
+
+
+        echo view("commom/template/html-header.php");
+        echo view("admin/template/splash.php");
+        echo view("admin/template/sidebar-html.php", $data);
+        echo view("admin/template/header.php", $data);
+        echo view('admin/planogram/setores.php', $data);
         echo view("admin/template/footer.php");
         echo view("commom/template/html-footer.php");
     }
@@ -2277,6 +2748,60 @@ class AdminController extends BaseController
         echo view("commom/template/html-footer.php");
     }
 
+    public function edit_alert_planogram()
+    {
+
+        $id_user = $this->session->get('id');
+        $created_by = $this->session->get('created_by');
+        $data['usuario'] = $this->adminModel->get_user_by_id($id_user);
+        $data['route'] = '';
+        if ($id_user == 1) {
+            $data['planograms'] = $this->adminModel->get_all_planograms();
+            $data['notifications'] = $this->adminModel->get_notifications_by($id_user);
+        } else if ($created_by) {
+            $data['planograms'] = $this->adminModel->get_planogram_by_user($created_by);
+            $data['notifications'] = $this->adminModel->get_notifications_by($created_by);
+        } else {
+            $data['planograms'] = $this->adminModel->get_planogram_by_user($id_user);
+            $data['notifications'] = $this->adminModel->get_notifications_by($id_user);
+        }
+        $total_width = 0;
+        $products = $this->adminModel->get_all_products();
+        $data['products'] = $products;
+        $id_planogram = $_GET['planogram'];
+        $data['planograma'] = $this->adminModel->get_planogram_by_id($id_planogram);
+        $data['columns_qtd'] = $this->adminModel->get_planogram_columns_quantity($id_planogram);
+        $data['shelves_qtd'] = $this->adminModel->get_planogram_shelves_quantity($id_planogram);
+        $all_positions = $this->adminModel->get_position_by_scenario($id_planogram);
+        $all_planograms = $this->adminModel->get_all_planograms();
+        $data['all_planogram_count'] = count($all_planograms);
+        foreach ($all_positions as $position) {
+            $data['columns'][$position["column"]][$position["shelf"]][] = $position;
+
+            if (isset($widths[$position["id_product"]]))
+                $widths[$position["id_product"]] = $widths[$position["id_product"]] + floatval($position["width"]);
+            else
+                $widths[$position["id_product"]] = floatval($position["width"]);
+
+            $total_width += floatval($position["width"]);
+        }
+        $data['widths'] = $widths;
+        $data['total_width'] = $total_width;
+        // echo json_encode($widths);
+        //Formatação data
+        $data['hoje'] = new Time('now', 'America/Sao_Paulo', 'pt_BR');
+        $data['formatter'] = $data['hoje'];
+
+        // echo "<pre>";var_dump($data);die();
+        echo view("commom/template/html-header.php");
+        echo view("admin/template/splash.php");
+        echo view("admin/template/sidebar-html.php", $data);
+        echo view("admin/template/header.php", $data);
+        echo view('admin/planogram/edit_alert_planogram.php', $data);
+        echo view("admin/template/footer.php");
+        echo view("commom/template/html-footer.php");
+    }
+
     public function export_share()
     {
         $products = $this->input->get('data');
@@ -2607,12 +3132,12 @@ class AdminController extends BaseController
         );
         $this->adminModel->insert_logs($logs);
 
-        $notification = array(
-            'content' => $this->session->get('name') . ' editou o produto ' . $produto[0]['name'] . ' na prateleira de ' . $scenario[0]['name'],
-            'id_user' => $this->session->get('id'),
-            'show_to' => $show_to
-        );
-        $this->adminModel->insert_notification($notification);
+//        $notification = array(
+//            'content' => $this->session->get('name') . ' editou o produto ' . $produto[0]['name'] . ' na prateleira de ' . $scenario[0]['name'],
+//            'id_user' => $this->session->get('id'),
+//            'show_to' => $show_to
+//        );
+//        $this->adminModel->insert_notification($notification);
     }
 
     public function remove_position()
