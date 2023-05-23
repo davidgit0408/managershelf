@@ -489,7 +489,7 @@ for ($c = 1; $c <= $columns_qtd; $c++) {
                         </div>
                         <div class="col-12 col-md-7 col-sm-6 col-lg-9 col-xl-8">
                             <h4 class="card-title"><a>Marca: <?php echo $product["marca"]; ?> </a></h4>
-                            <h4 class="card-title"><a>Total de frentes no planograma: <?php echo $product["total_frentes"]; ?> </a></h4>
+                            <h4 class="card-title"><a>Total de frentes no planograma: <?php echo $product["views"]; ?> </a></h4>
                             <div class="row col-12 col-md-12 col-sm-12 col-lg-12 col-xl-12">
                                 <?php if (isset($product["position"])) {
                                     foreach ($product["position"] as $position) { ?>
@@ -579,8 +579,8 @@ for ($c = 1; $c <= $columns_qtd; $c++) {
     }
 
     function save_edit() {
-        let qty = $('#edit_product input[name="views"]').val();
-        let views = $('#edit_product input[name="qty"]').val();
+        let qty = $('#edit_product input[name="qty"]').val();
+        let views = $('#edit_product input[name="views"]').val();
         let alert_count = $('#edit_product input[name="alert"]').val();
         let id_product = $('#edit_product select[name="id_product"]').val();
         let id_position = $('#edit_product input[name="id"]').val();

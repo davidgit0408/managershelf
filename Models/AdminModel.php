@@ -540,6 +540,7 @@ class AdminModel extends Model
             $builder->join('products', 'positions.id_product = products.id', 'left');
             $builder->where('id_user', $id);
             $builder->where('positions.alert_count >= positions.qty');
+            $builder->where('positions.id_product > 0');
             $builder->where('scenarios.release_flag = 0');
             $builder->groupBy('scenarios.id');
             $query = $builder->get();
