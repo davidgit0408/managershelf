@@ -336,9 +336,11 @@ $views = 0;
 						<li class="sidebar-item <?php if($route == 'all_products') { echo 'active'; } ?>"><a class="sidebar-link" href="<?php echo base_url('index.php/all_products') ?>">- Todos Produtos</a></li>
 						<li class="sidebar-item <?php if($route == 'new_product') { echo 'active'; } ?>"><a class="sidebar-link" href="<?php echo base_url('index.php/new_product') ?>">- Adicionar Produto</a></li>
 						<li class="sidebar-item <?php if($route == 'import_export') { echo 'active'; } ?>"><a class="sidebar-link" href="<?php echo base_url('index.php/import_export') ?>">- Importar/Exportar Produto</a></li>
-						<li class="sidebar-item <?php if($route == 'bigdata_products') { echo 'active'; } ?>"><a class="sidebar-link" href="<?php echo base_url('index.php/bigdata_products') ?>">- Base de produtos</a></li>
-                        <li class="sidebar-item <?php if($route == 'new_bigdata') { echo 'active'; } ?>"><a class="sidebar-link" href="<?php echo base_url('index.php/new_bigdata') ?>">- Adicionar Base Produto</a></li>
-                        <li class="sidebar-item <?php if($route == 'import_export_base') { echo 'active'; } ?>"><a class="sidebar-link" href="<?php echo base_url('index.php/import_export_base') ?>">- Importar/Exportar Base Produto</a></li>
+                        <?php if ($role == 'admin') { ?>
+                            <li class="sidebar-item <?php if($route == 'bigdata_products') { echo 'active'; } ?>"><a class="sidebar-link" href="<?php echo base_url('index.php/bigdata_products') ?>">- Base de produtos</a></li>
+                            <li class="sidebar-item <?php if($route == 'new_bigdata') { echo 'active'; } ?>"><a class="sidebar-link" href="<?php echo base_url('index.php/new_bigdata') ?>">- Adicionar Base Produto</a></li>
+                            <li class="sidebar-item <?php if($route == 'import_export_base') { echo 'active'; } ?>"><a class="sidebar-link" href="<?php echo base_url('index.php/import_export_base') ?>">- Importar/Exportar Base Produto</a></li>
+                        <?php } ?>
                     </ul>
 				</li>
 				<li class="sidebar-item">

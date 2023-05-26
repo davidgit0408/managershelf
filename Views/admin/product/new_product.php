@@ -89,6 +89,7 @@ $error_msg = $session->getFlashdata('error_msg');
                                     <span class="mt-4 form-check-label">Gerar EAN</span>
                                     <div id="info" title="Código único de identificação do produto." data-mdb-toggle="tooltip" data-mdb-placement="bottom"><i class="fas fa-info-circle"></i></div>
                                 </label>
+                                <input id="button_url" class="btn bg-orange text-white mt-2" type="button" value="Importar Produto" onclick="import_from_base()" />
                             </div>
                         </div>
                         <div class="col-lg-6">
@@ -549,12 +550,31 @@ $error_msg = $session->getFlashdata('error_msg');
         formData.append("id", idValue);
     });
 
-    $("input[name=ean]").change( function() {
+    //$("input[name=ean]").change( function() {
+    //    let ean = $("input[name=ean]").val();
+    //    // $("input[name=ean]").val('');
+    //    if (ean != null) {
+    //        $.ajax({
+    //            url: "<?php //echo base_url('index.php/check_produtos'); ?>//",
+    //            method: "POST",
+    //            data: {ean_product: ean},
+    //            success: function (data) {
+    //                if (JSON.parse(data).success == 1) {
+    //                    $('.product_ean').attr('data-id', ean);
+    //                    $("#open_modal").click();
+    //                }
+    //            }
+    //        })
+    //    }
+    //});
+
+    function import_from_base() {
+        console.log('aaa')
         let ean = $("input[name=ean]").val();
         // $("input[name=ean]").val('');
         if (ean != null) {
             $.ajax({
-                url: "<?php echo base_url('index.php/check_produtos'); ?>",
+                url: "<?php echo base_url('index.php/check_base_produtos'); ?>",
                 method: "POST",
                 data: {ean_product: ean},
                 success: function (data) {
@@ -565,12 +585,12 @@ $error_msg = $session->getFlashdata('error_msg');
                 }
             })
         }
-    });
+    }
 
     function get_produtos() {
         let ean = $('.product_ean').attr('data-id');
         $.ajax({
-            url: "<?php echo base_url('index.php/get_produtos'); ?>",
+            url: "<?php echo base_url('index.php/get_base_produtos'); ?>",
             method: "POST",
             data: {ean_product: ean},
             success: function (data) {
